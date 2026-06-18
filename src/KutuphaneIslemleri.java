@@ -6,26 +6,63 @@ import java.util.Scanner;
 public class KutuphaneIslemleri {
 
     public static void main(String[] args) {
-        tabloyuOlustur();
-
+        tablolariKur();
         Scanner okuyucu = new Scanner(System.in);
+        boolean devam = true;
 
-        System.out.print("Kitap ismini gir: ");
-        String baslik = okuyucu.nextLine();
+        while (devam) {
+            System.out.println("\n--- KUTUPHANE SISTEMI ---");
+            System.out.println("1- Kitap Ekle");
+            System.out.println("2- Kitaplari Listele");
+            System.out.println("3- Uye Ekle");
+            System.out.println("4- Uyeleri Listele");
+            System.out.println("5- Kitap Odunc Ver");
+            System.out.println("6- Cikis");
+            System.out.print("Seciminiz: ");
 
-        System.out.print("Yazar ismini gir: ");
-        String yazar = okuyucu.nextLine();
+            int secim = okuyucu.nextInt();
+            okuyucu.nextLine();
 
-        kitapEkle(baslik, yazar);
-        kitaplariListele();
+            if (secim == 1) {
+                System.out.print("Kitap ismini gir: ");
+                String baslik = okuyucu.nextLine();
+                System.out.print("Yazar ismini gir: ");
+                String yazar = okuyucu.nextLine();
+                kitapEkle(baslik, yazar);
+            } else if (secim == 2) {
+                kitaplariListele();
+            } else if (secim == 3) {
+                System.out.print("Uye Ad Soyad gir: ");
+                String adSoyad = okuyucu.nextLine();
+                uyeEkle(adSoyad);
+            } else if (secim == 4) {
+                uyeleriListele();
+            } else if (secim == 5) {
+                System.out.print("Odunc verilecek Kitabin ID numarasini gir: ");
+                int kitapId = okuyucu.nextInt();
+                System.out.print("Odunc alacak Uyenin ID numarasini gir: ");
+                int uyeId = okuyucu.nextInt();
+                kitapOduncVer(kitapId, uyeId);
+            } else if (secim == 6) {
+                System.out.println("Sistemden cikiliyor...");
+                devam = false;
+            } else {
+                System.out.println("Gecersiz secim!");
+            }
+        }
     }
 
-    public static void tabloyuOlustur() {
+    public static void tablolariKur() {
         Connection baglanti = VeritabaniBaglantisi.baglan();
-        String sql = "CREATE TABLE IF NOT EXISTS Kitaplar (id INTEGER PRIMARY KEY AUTOINCREMENT, baslik TEXT, yazar TEXT)";
+        String kitapSQL = "CREATE TABLE IF NOT EXISTS Kitaplar (id INTEGER PRIMARY KEY AUTOINCREMENT, baslik TEXT, yazar TEXT)";
+        String uyeSQL = "CREATE TABLE IF NOT EXISTS Uyeler (id INTEGER PRIMARY KEY AUTOINCREMENT, ad_soyad TEXT)";
+        String oduncSQL = "CREATE TABLE IF NOT EXISTS Odunc (id INTEGER PRIMARY KEY AUTOINCREMENT, kitap_id INTEGER, uye_id INTEGER, FOREIGN KEY(kitap_id) REFERENCES Kitaplar(id), FOREIGN KEY(uye_id) REFERENCES Uyeler(id))";
+
         try {
             Statement ifade = baglanti.createStatement();
-            ifade.execute(sql);
+            ifade.execute(kitapSQL);
+            ifade.execute(uyeSQL);
+            ifade.execute(oduncSQL);
             baglanti.close();
         } catch (Exception hata) {
             System.out.println("Tablo hatasi: " + hata.getMessage());
@@ -58,6 +95,48 @@ public class KutuphaneIslemleri {
             baglanti.close();
         } catch (Exception hata) {
             System.out.println("Listeleme hatasi: " + hata.getMessage());
+        }
+    }
+
+    public static void uyeEkle(String adSoyad) {
+        Connection baglanti = VeritabaniBaglantisi.baglan();
+        String sql = "INSERT INTO Uyeler (ad_soyad) VALUES ('" + adSoyad + "')";
+        try {
+            Statement ifade = baglanti.createStatement();
+            ifade.execute(sql);
+            System.out.println("Uye basariyla eklendi.");
+            baglanti.close();
+        } catch (Exception hata) {
+            System.out.println("Hata: " + hata.getMessage());
+        }
+    }
+
+    public static void uyeleriListele() {
+        Connection baglanti = VeritabaniBaglantisi.baglan();
+        String sql = "SELECT * FROM Uyeler";
+        try {
+            Statement ifade = baglanti.createStatement();
+            ResultSet sonuc = ifade.executeQuery(sql);
+            System.out.println("--- Kayitli Uyeler ---");
+            while (sonuc.next()) {
+                System.out.println("ID: " + sonuc.getInt("id") + " | Ad Soyad: " + sonuc.getString("ad_soyad"));
+            }
+            baglanti.close();
+        } catch (Exception hata) {
+            System.out.println("Listeleme hatasi: " + hata.getMessage());
+        }
+    }
+
+    public static void kitapOduncVer(int kitapId, int uyeId) {
+        Connection baglanti = VeritabaniBaglantisi.baglan();
+        String sql = "INSERT INTO Odunc (kitap_id, uye_id) VALUES (" + kitapId + ", " + uyeId + ")";
+        try {
+            Statement ifade = baglanti.createStatement();
+            ifade.execute(sql);
+            System.out.println("Kitap basariyla odunc verildi.");
+            baglanti.close();
+        } catch (Exception hata) {
+            System.out.println("Hata: " + hata.getMessage());
         }
     }
 }
