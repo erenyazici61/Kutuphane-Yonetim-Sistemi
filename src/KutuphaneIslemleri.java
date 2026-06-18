@@ -14,12 +14,14 @@ public class KutuphaneIslemleri {
             System.out.println("\n--- KUTUPHANE SISTEMI ---");
             System.out.println("1- Kitap Ekle");
             System.out.println("2- Kitaplari Listele");
-            System.out.println("3- Uye Ekle");
-            System.out.println("4- Uyeleri Listele");
-            System.out.println("5- Kitap Odunc Ver");
-            System.out.println("6- Odunc Verilenleri Listele");
-            System.out.println("7- Kitap Sil");
-            System.out.println("8- Cikis");
+            System.out.println("3- Kitap Sil");
+            System.out.println("4- Uye Ekle");
+            System.out.println("5- Uyeleri Listele");
+            System.out.println("6- Uye Sil");
+            System.out.println("7- Kitap Odunc Ver");
+            System.out.println("8- Odunc Verilenleri Listele");
+            System.out.println("9- Odunc Kaydi Sil ");
+            System.out.println("10- Cikis");
             System.out.print("Seciminiz: ");
 
             int secim = okuyucu.nextInt();
@@ -34,24 +36,32 @@ public class KutuphaneIslemleri {
             } else if (secim == 2) {
                 kitaplariListele();
             } else if (secim == 3) {
+                System.out.print("Silinecek Kitabin ID numarasini gir: ");
+                int silinecekId = okuyucu.nextInt();
+                kitapSil(silinecekId);
+            } else if (secim == 4) {
                 System.out.print("Uye Ad Soyad gir: ");
                 String adSoyad = okuyucu.nextLine();
                 uyeEkle(adSoyad);
-            } else if (secim == 4) {
-                uyeleriListele();
             } else if (secim == 5) {
+                uyeleriListele();
+            } else if (secim == 6) {
+                System.out.print("Silinecek Uyenin ID numarasini gir: ");
+                int silinecekUyeId = okuyucu.nextInt();
+                uyeSil(silinecekUyeId);
+            } else if (secim == 7) {
                 System.out.print("Odunc verilecek Kitabin ID numarasini gir: ");
                 int kitapId = okuyucu.nextInt();
                 System.out.print("Odunc alacak Uyenin ID numarasini gir: ");
                 int uyeId = okuyucu.nextInt();
                 kitapOduncVer(kitapId, uyeId);
-            } else if (secim == 6) {
-                oduncListele();
-            } else if (secim == 7) {
-                System.out.print("Silinecek Kitabin ID numarasini gir: ");
-                int silinecekId = okuyucu.nextInt();
-                kitapSil(silinecekId);
             } else if (secim == 8) {
+                oduncListele();
+            } else if (secim == 9) {
+                System.out.print("Silinecek Odunc Kaydinin (Iade) ID numarasini gir: ");
+                int silinecekOduncId = okuyucu.nextInt();
+                oduncSil(silinecekOduncId);
+            } else if (secim == 10) {
                 System.out.println("Sistemden cikiliyor...");
                 devam = false;
             } else {
@@ -106,6 +116,19 @@ public class KutuphaneIslemleri {
         }
     }
 
+    public static void kitapSil(int id) {
+        Connection baglanti = VeritabaniBaglantisi.baglan();
+        String sql = "DELETE FROM Kitaplar WHERE id = " + id;
+        try {
+            Statement ifade = baglanti.createStatement();
+            ifade.execute(sql);
+            System.out.println("Kitap sistemden basariyla silindi.");
+            baglanti.close();
+        } catch (Exception hata) {
+            System.out.println("Silme hatasi: " + hata.getMessage());
+        }
+    }
+
     public static void uyeEkle(String adSoyad) {
         Connection baglanti = VeritabaniBaglantisi.baglan();
         String sql = "INSERT INTO Uyeler (ad_soyad) VALUES ('" + adSoyad + "')";
@@ -132,6 +155,19 @@ public class KutuphaneIslemleri {
             baglanti.close();
         } catch (Exception hata) {
             System.out.println("Listeleme hatasi: " + hata.getMessage());
+        }
+    }
+
+    public static void uyeSil(int id) {
+        Connection baglanti = VeritabaniBaglantisi.baglan();
+        String sql = "DELETE FROM Uyeler WHERE id = " + id;
+        try {
+            Statement ifade = baglanti.createStatement();
+            ifade.execute(sql);
+            System.out.println("Uye sistemden basariyla silindi.");
+            baglanti.close();
+        } catch (Exception hata) {
+            System.out.println("Silme hatasi: " + hata.getMessage());
         }
     }
 
@@ -164,16 +200,16 @@ public class KutuphaneIslemleri {
         }
     }
 
-    public static void kitapSil(int id) {
+    public static void oduncSil(int id) {
         Connection baglanti = VeritabaniBaglantisi.baglan();
-        String sql = "DELETE FROM Kitaplar WHERE id = " + id;
+        String sql = "DELETE FROM Odunc WHERE id = " + id;
         try {
             Statement ifade = baglanti.createStatement();
             ifade.execute(sql);
-            System.out.println("Kitap sistemden basariyla silindi.");
+            System.out.println("Odunc kaydi basariyla silindi (Kitap iade alindi).");
             baglanti.close();
         } catch (Exception hata) {
-            System.out.println("Silme hatasi: " + hata.getMessage());
+            System.out.println("Odunc silme hatasi: " + hata.getMessage());
         }
     }
 }
