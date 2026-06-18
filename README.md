@@ -1,22 +1,22 @@
 # Kütüphane Yönetim Sistemi
 
-Merhaba! Bu proje, bilgisayar mühendisliği 2. sınıf staj uygulamam kapsamında geliştirdiğim temel bir Kütüphane Yönetim Sistemi'dir. Java ve SQL kullanarak yazdım. Amacım, konsol üzerinden çalışan basit bir veritabanı uygulaması geliştirmekti.
+Merhaba! Bu proje, bilgisayar mühendisliği 2. sınıf staj uygulamam kapsamında geliştirdiğim konsol tabanlı bir Kütüphane Yönetim Sistemi'dir. Java ve SQL kullanarak tam kapsamlı bir CRUD uygulaması geliştirdim.
 
 ## Sistemde Neler Var?
-Menü üzerinden şu işlemleri yapabiliyoruz:
-- **Kitaplar:** Yeni kitap ekleme ve sistemdeki tüm kitapları listeleme.
-- **Üyeler:** Kütüphaneye yeni üye kaydetme ve tüm üyeleri görme.
-- **Ödünç Verme:** Sisteme eklediğimiz kitapları, yine sistemdeki üyelere ID numaraları üzerinden ödünç verme. 
+Sistem mantıksal olarak 3 ana bloğa ayrılmıştır:
+- **Kitap İşlemleri:** Yeni kitap ekleme, tüm kitapları listeleme, kitap bilgilerini güncelleme ve sistemden kitap silme.
+- **Üye İşlemleri:** Kütüphaneye yeni üye kaydetme, üyeleri listeleme, üye bilgilerini güncelleme ve üye silme.
+- **Ödünç İşlemleri:** Üyelere kitap zimmetleme (ödünç verme), kimde hangi kitap var listeleme ve iade alma (ödünç kaydını silme).
 
 ## Neler Kullandım?
 - **Dil:** Java
-- **Veritabanı:** SQL 
-- **Bağlantı:** JDBC Kütüphanesi
-- **IDE:** IntelliJ IDEA
+- **Veritabanı:** SQLite 
+- **Bağlantı:** JDBC Kütüphanesi 
+- **Geliştirme Ortamı:** IntelliJ IDEA
 
 ## Projeyi Bilgisayarınızda Çalıştırmak İçin
- Kodları denemek isterseniz adımlar şu şekilde:
-1. Projeyi bilgisayarınızda klonlayın ve IntelliJ IDEA ile açın.
-2. Sol taraftan `lib` klasörünü açın. İçindeki `sqlite-jdbc` .jar dosyasına sağ tıklayıp **"Add as Library..."** seçeneğine tıklayın. (Veritabanının çalışması için bu adım şart).
-3. `src` klasöründeki `KutuphaneIslemleri.java` dosyasını Run tuşuna basarak çalıştırın.
-4. Alt tarafta açılan konsol ekranından sayıları tuşlayarak menüyü kullanabilirsiniz.
+Hocam kodları test etmek isterseniz adımlar şu şekildedir:
+1. Projeyi bilgisayarınıza klonlayın ve IntelliJ IDEA ile açın.
+2. Sol taraftaki proje dizininden `lib` klasörünü açın. İçindeki `sqlite-jdbc` .jar dosyasına sağ tıklayıp **"Add as Library..."** seçeneğine tıklayın. (Veritabanının çalışması için bu adım şarttır).
+3. `src` klasöründeki `KutuphaneIslemleri.java` dosyasını çalıştırın.
+4. Alt tarafta açılan konsol ekranından menüdeki sayıları tuşlayarak tüm CRUD işlemlerini test edebilirsiniz.
