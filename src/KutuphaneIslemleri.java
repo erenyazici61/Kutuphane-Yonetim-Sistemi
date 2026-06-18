@@ -17,7 +17,9 @@ public class KutuphaneIslemleri {
             System.out.println("3- Uye Ekle");
             System.out.println("4- Uyeleri Listele");
             System.out.println("5- Kitap Odunc Ver");
-            System.out.println("6- Cikis");
+            System.out.println("6- Odunc Verilenleri Listele");
+            System.out.println("7- Kitap Sil");
+            System.out.println("8- Cikis");
             System.out.print("Seciminiz: ");
 
             int secim = okuyucu.nextInt();
@@ -44,6 +46,12 @@ public class KutuphaneIslemleri {
                 int uyeId = okuyucu.nextInt();
                 kitapOduncVer(kitapId, uyeId);
             } else if (secim == 6) {
+                oduncListele();
+            } else if (secim == 7) {
+                System.out.print("Silinecek Kitabin ID numarasini gir: ");
+                int silinecekId = okuyucu.nextInt();
+                kitapSil(silinecekId);
+            } else if (secim == 8) {
                 System.out.println("Sistemden cikiliyor...");
                 devam = false;
             } else {
@@ -137,6 +145,35 @@ public class KutuphaneIslemleri {
             baglanti.close();
         } catch (Exception hata) {
             System.out.println("Hata: " + hata.getMessage());
+        }
+    }
+
+    public static void oduncListele() {
+        Connection baglanti = VeritabaniBaglantisi.baglan();
+        String sql = "SELECT * FROM Odunc";
+        try {
+            Statement ifade = baglanti.createStatement();
+            ResultSet sonuc = ifade.executeQuery(sql);
+            System.out.println("--- Odunc Verilen Kitaplarin Listesi ---");
+            while (sonuc.next()) {
+                System.out.println("Odunc ID: " + sonuc.getInt("id") + " | Kitap ID: " + sonuc.getInt("kitap_id") + " | Uye ID: " + sonuc.getInt("uye_id"));
+            }
+            baglanti.close();
+        } catch (Exception hata) {
+            System.out.println("Odunc listeleme hatasi: " + hata.getMessage());
+        }
+    }
+
+    public static void kitapSil(int id) {
+        Connection baglanti = VeritabaniBaglantisi.baglan();
+        String sql = "DELETE FROM Kitaplar WHERE id = " + id;
+        try {
+            Statement ifade = baglanti.createStatement();
+            ifade.execute(sql);
+            System.out.println("Kitap sistemden basariyla silindi.");
+            baglanti.close();
+        } catch (Exception hata) {
+            System.out.println("Silme hatasi: " + hata.getMessage());
         }
     }
 }
